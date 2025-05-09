@@ -23,9 +23,9 @@ namespace EgyWalk.Api.Controllers
 
         // get all walks 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery]string? filterQury)
         {
-            var Walks = await _walkRepository.GetAllAsync();
+            var Walks = await _walkRepository.GetAllAsync(filterQury);
 
             
 
