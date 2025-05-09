@@ -1,4 +1,6 @@
-﻿using EgyWalk.Api.Models.Domain;
+﻿using AutoMapper;
+using EgyWalk.Api.Dtos.WalkDtos;
+using EgyWalk.Api.Models.Domain;
 using EgyWalk.Api.Repositories.WalkRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +12,12 @@ namespace EgyWalk.Api.Controllers
     public class WalkController : ControllerBase
     {
         private readonly IWalkRepository _walkRepository;
+        private readonly IMapper _mapper;
 
-        public WalkController(IWalkRepository walkRepository)
+        public WalkController(IWalkRepository walkRepository , IMapper mapper)
         {
             _walkRepository = walkRepository;
+            _mapper = mapper;
         }
 
 
@@ -21,38 +25,60 @@ namespace EgyWalk.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-          return  Ok( await _walkRepository.GetAllAsync());
+            var Walks = await _walkRepository.GetAllAsync();
+
+            
+
+          return  Ok(_mapper.Map<List<ReadWalkDto>>(Walks));
         }
         // get all walks by id
         [HttpGet("{Id}")]
-        public async Task<IActionResult> GetById([FromBody]Guid Id)
+        public async Task<IActionResult> GetById([FromRoute] Guid Id)
         {
-            return Ok(await _walkRepository.GetAsync(Id));
+            var walk = await _walkRepository.GetAsync(Id);
+            if (walk == null)
+            {
+                return NotFound();
+            }
+            return Ok(_mapper.Map<ReadWalkDto>(walk));
         }
 
 
         // add new walk
         [HttpPost]
-        public async Task<IActionResult> Post(Walk walk)
+        public async Task<IActionResult> Post(AddWalkDto walkDto)
         {
+            var walks = await _walkRepository.AddAsync(_mapper.Map<Walk>(walkDto));
 
-            return Ok(await _walkRepository.AddAsync(walk));
+            return Ok(_mapper.Map<ReadWalkDto>(walks));
         }
 
         // Delete a walk 
         [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] Guid Id)
+        [Route("{Id:Guid}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid Id)
         {
-
-            return Ok(await _walkRepository.DeleteAsync(Id));
+            var walk = await _walkRepository.DeleteAsync(Id);
+            if (walk == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(_mapper.Map<ReadWalkDto>(walk));
         }
 
         // update a walk 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] Guid Id , Walk walk)
+        [Route("{Id:Guid}")]
+        public async Task<IActionResult> Update([FromRoute] Guid Id , AddWalkDto walkDto)
         {
-
-            return Ok(await _walkRepository.Update(Id, walk));
+            var walk = await _walkRepository.Update(Id, _mapper.Map<Walk>(walkDto));
+            if (walk == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(_mapper.Map<AddWalkDto>(walk));
         }
 
     }
