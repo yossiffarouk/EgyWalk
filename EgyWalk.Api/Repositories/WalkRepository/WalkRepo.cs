@@ -34,18 +34,9 @@ namespace EgyWalk.Api.Repositories.WalkRepository
             return WalkToDelete;
         }
 
-        public async Task<IEnumerable<Walk>> GetAllAsync(string? filterQury = null)
+        public async Task<IEnumerable<Walk>> GetAllAsync()
         {
-
-            var walks =  _db.Walks.AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(filterQury))
-            {
-                walks = walks.Where(a=>a.Name.Contains(filterQury));
-            }
-
-
-            return walks;
+            return await _db.Walks.ToListAsync();
         }
 
         public async Task<Walk?> GetAsync(Guid Id)
