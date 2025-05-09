@@ -34,13 +34,14 @@ namespace EgyWalk.Api.Repositories.WalkRepository
             return WalkToDelete;
         }
 
-        public async Task<IEnumerable<Walk>> GetAllAsync(string? filterQury , string? sortBy , bool isAscending)
+        public async Task<IEnumerable<Walk>> GetAllAsync(string? filterQury , string? sortBy , bool isAscending, int pageNumber = 1, int pageSize = 1000)
         {
             var walks = _db.Walks.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(filterQury))
             {
                 walks = walks.Where(a => a.Name.Contains(filterQury));
+                pageNumber = 1;
             }
             if (!string.IsNullOrWhiteSpace(sortBy))
             {
@@ -55,7 +56,9 @@ namespace EgyWalk.Api.Repositories.WalkRepository
                
             }
 
-            return walks;
+            var skipedRows = (pageNumber - 1) * pageSize;
+
+            return await walks.Skip(skipedRows).Take(pageSize).ToListAsync();
         }
 
         public async Task<Walk?> GetAsync(Guid Id)

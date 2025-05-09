@@ -23,9 +23,9 @@ namespace EgyWalk.Api.Controllers
 
         // get all walks 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery]string? filterQury , string? sortBy, bool? isAscending)
+        public async Task<IActionResult> GetAll([FromQuery]string? filterQury , string? sortBy, bool? isAscending, int pageNumber = 1, int pageSize = 1000)
         {
-            var Walks = await _walkRepository.GetAllAsync(filterQury , sortBy , isAscending?? true);
+            var Walks = await _walkRepository.GetAllAsync(filterQury , sortBy , isAscending?? true , pageNumber ,pageSize);
 
             
 
