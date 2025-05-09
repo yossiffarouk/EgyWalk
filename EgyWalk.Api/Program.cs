@@ -1,4 +1,5 @@
 using EgyWalk.Api.Data;
+using EgyWalk.Api.Repositories.WalkRepository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,10 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IWalkRepository , WalkRepo>();
 
 builder.Services.AddDbContext<EgyWalkDbContext>(options =>
  options.UseSqlServer(builder.Configuration.GetConnectionString("EgyWalkConnectionString")));
+
+
+
+
 
 var app = builder.Build();
 
