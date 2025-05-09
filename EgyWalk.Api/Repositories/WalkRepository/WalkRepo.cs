@@ -34,7 +34,7 @@ namespace EgyWalk.Api.Repositories.WalkRepository
             return WalkToDelete;
         }
 
-        public async Task<IEnumerable<Walk>> GetAllAsync(string? filterQury)
+        public async Task<IEnumerable<Walk>> GetAllAsync(string? filterQury , string? sortBy , bool isAscending)
         {
             var walks = _db.Walks.AsQueryable();
 
@@ -42,7 +42,18 @@ namespace EgyWalk.Api.Repositories.WalkRepository
             {
                 walks = walks.Where(a => a.Name.Contains(filterQury));
             }
-
+            if (!string.IsNullOrWhiteSpace(sortBy))
+            {
+                if (sortBy.Equals("Name",StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = isAscending ? walks.OrderBy(a => a.Name) : walks.OrderByDescending(a => a.Name);
+                }
+                else if (sortBy.Equals("Length", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = isAscending ? walks.OrderBy(a => a.LengthInKm) : walks.OrderByDescending(a => a.LengthInKm);
+                }
+               
+            }
 
             return walks;
         }
