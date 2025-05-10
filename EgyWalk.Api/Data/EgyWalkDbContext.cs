@@ -6,7 +6,7 @@ namespace EgyWalk.Api.Data
 {
     public class EgyWalkDbContext :DbContext
     {
-        public EgyWalkDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        public EgyWalkDbContext(DbContextOptions<EgyWalkDbContext> dbContextOptions) : base(dbContextOptions)
         {
         }
 

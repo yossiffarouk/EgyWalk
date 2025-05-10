@@ -23,6 +23,9 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 builder.Services.AddDbContext<EgyWalkDbContext>(options =>
  options.UseSqlServer(builder.Configuration.GetConnectionString("EgyWalkConnectionString")));
 
+builder.Services.AddDbContext<EgyWalkAthuDbContext>(options =>
+ options.UseSqlServer(builder.Configuration.GetConnectionString("EgyWalkAthuConnectionString")));
+
 // jwt auth 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(option =>
