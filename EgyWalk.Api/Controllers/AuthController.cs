@@ -51,5 +51,37 @@ namespace EgyWalk.Api.Controllers
         }
 
 
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginUserDto LoginDto)
+        {
+
+
+            var user = await _userManager.FindByEmailAsync(LoginDto.UserName);
+
+
+            if (user != null)
+            {
+
+                var CheakPassword = await _userManager.CheckPasswordAsync(user, LoginDto.Password);
+                if (CheakPassword)
+                {
+                   // jwt token 
+
+
+
+                        return Ok($"Wolecome {user.UserName} !");
+                    
+                }
+
+            }
+
+
+
+
+
+            return BadRequest("Email Or Password was Wrong ");
+        }
     }
 }
