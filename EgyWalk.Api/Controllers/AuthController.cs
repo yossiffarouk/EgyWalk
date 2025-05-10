@@ -1,4 +1,5 @@
 ﻿using EgyWalk.Api.Dtos.AuthDtos;
+using EgyWalk.Api.Repositories.TokenRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace EgyWalk.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly ITokenRepo _tokenRepo;
 
-        public AuthController(UserManager<IdentityUser> userManager)
+        public AuthController(UserManager<IdentityUser> userManager , ITokenRepo tokenRepo)
         {
             _userManager = userManager;
+            _tokenRepo = tokenRepo;
         }
         // register 
         [HttpPost]
@@ -67,11 +70,26 @@ namespace EgyWalk.Api.Controllers
                 var CheakPassword = await _userManager.CheckPasswordAsync(user, LoginDto.Password);
                 if (CheakPassword)
                 {
-                   // jwt token 
+                    // cheak user roles 
+                    var UserRoles = await _userManager.GetRolesAsync(user);
+                    if (UserRoles != null )
+                    {
+
+                        // jwt token 
+
+                        var token = _tokenRepo.CreateToken(user, UserRoles.ToList());
 
 
+                        var response = new LoginResponseDto()
+                        {
+                            JwtToken = token
+                        };
 
-                        return Ok($"Wolecome {user.UserName} !");
+                        return Ok(response.JwtToken);
+                    }
+
+
+                        
                     
                 }
 

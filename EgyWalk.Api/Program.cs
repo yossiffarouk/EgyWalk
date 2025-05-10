@@ -1,6 +1,7 @@
 using AutoMapper;
 using EgyWalk.Api.Data;
 using EgyWalk.Api.Mapping;
+using EgyWalk.Api.Repositories.TokenRepository;
 using EgyWalk.Api.Repositories.WalkRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IWalkRepository , WalkRepo>();
+builder.Services.AddScoped<ITokenRepo , TokenRepo>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 builder.Services.AddDbContext<EgyWalkDbContext>(options =>
