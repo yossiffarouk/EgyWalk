@@ -10,7 +10,7 @@ namespace EgyWalk.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+  
     public class WalkController : ControllerBase
     {
         private readonly IWalkRepository _walkRepository;
@@ -25,6 +25,7 @@ namespace EgyWalk.Api.Controllers
 
         // get all walks 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery]string? filterQury , string? sortBy, bool? isAscending, int pageNumber = 1, int pageSize = 1000)
         {
             var Walks = await _walkRepository.GetAllAsync(filterQury , sortBy , isAscending?? true , pageNumber ,pageSize);
@@ -35,6 +36,7 @@ namespace EgyWalk.Api.Controllers
         }
         // get all walks by id
         [HttpGet("{Id}")]
+        [Authorize]
         public async Task<IActionResult> GetById([FromRoute] Guid Id)
         {
             var walk = await _walkRepository.GetAsync(Id);
@@ -48,6 +50,7 @@ namespace EgyWalk.Api.Controllers
 
         // add new walk
         [HttpPost]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Post(AddWalkDto walkDto)
         {
             var walks = await _walkRepository.AddAsync(_mapper.Map<Walk>(walkDto));
@@ -57,7 +60,9 @@ namespace EgyWalk.Api.Controllers
 
         // Delete a walk 
         [HttpDelete]
-        [Route("{Id:Guid}")]
+        [Route("Delete/{Id:Guid}")]
+        [Authorize(Roles = "Writer")]
+
         public async Task<IActionResult> Delete([FromRoute] Guid Id)
         {
             var walk = await _walkRepository.DeleteAsync(Id);
@@ -72,6 +77,7 @@ namespace EgyWalk.Api.Controllers
         // update a walk 
         [HttpPut]
         [Route("{Id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid Id , AddWalkDto walkDto)
         {
             var walk = await _walkRepository.Update(Id, _mapper.Map<Walk>(walkDto));
