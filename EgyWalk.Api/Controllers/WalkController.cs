@@ -31,19 +31,18 @@ namespace EgyWalk.Api.Controllers
         //[Authorize]
         public async Task<IActionResult> GetAll([FromQuery]string? filterQury , string? sortBy, bool? isAscending, int pageNumber = 1, int pageSize = 1000)
         {
-            try
-            {
-                _log.LogInformation("User use A get all method");
+
+
+               
+
+
+
+
+
                 var Walks = await _walkRepository.GetAllAsync(filterQury, sortBy, isAscending ?? true, pageNumber, pageSize);
                 return Ok(_mapper.Map<List<ReadWalkDto>>(Walks));
-            }
-            catch (Exception ex )
-            {
-
-                _log.LogError(ex ,ex.Message);
-
-                throw;
-            }
+            
+         
            
 
             

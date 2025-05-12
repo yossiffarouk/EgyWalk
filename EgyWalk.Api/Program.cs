@@ -1,6 +1,7 @@
 using AutoMapper;
 using EgyWalk.Api.Data;
 using EgyWalk.Api.Mapping;
+using EgyWalk.Api.MiddelWares;
 using EgyWalk.Api.Repositories.ImageRepository;
 using EgyWalk.Api.Repositories.TokenRepository;
 using EgyWalk.Api.Repositories.WalkRepository;
@@ -135,6 +136,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<GlobalExpctionHandler>();
 
 app.UseHttpsRedirection();
 
