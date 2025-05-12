@@ -3,6 +3,7 @@ using EgyWalk.Api.Data;
 using EgyWalk.Api.Mapping;
 using EgyWalk.Api.MiddelWares;
 using EgyWalk.Api.Repositories.ImageRepository;
+using EgyWalk.Api.Repositories.RegionRepositroy;
 using EgyWalk.Api.Repositories.TokenRepository;
 using EgyWalk.Api.Repositories.WalkRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -67,6 +68,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddScoped<IWalkRepository , WalkRepo>();
+builder.Services.AddScoped<IRegionRepo , RegionRepo>();
 builder.Services.AddScoped<ITokenRepo , TokenRepo>();
 builder.Services.AddScoped<IimageRepo , ImageLocalRepo>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));

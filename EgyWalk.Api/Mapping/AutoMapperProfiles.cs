@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EgyWalk.Api.Dtos.RegionDtos;
 using EgyWalk.Api.Dtos.WalkDtos;
 using EgyWalk.Api.Models.Domain;
 
@@ -10,6 +11,7 @@ namespace EgyWalk.Api.Mapping
 
             CreateMap<Walk , AddWalkDto>().ReverseMap();
             CreateMap<Walk , ReadWalkDto>().ReverseMap();
+            CreateMap<Region , ReadRegionDto>().ReverseMap();
         }
     }
 }
