@@ -5,6 +5,7 @@ using EgyWalk.Api.Repositories.WalkRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace EgyWalk.Api.Controllers
 {
@@ -15,24 +16,39 @@ namespace EgyWalk.Api.Controllers
     {
         private readonly IWalkRepository _walkRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<WalkController> _log;
 
-        public WalkController(IWalkRepository walkRepository , IMapper mapper)
+        public WalkController(IWalkRepository walkRepository , IMapper mapper , ILogger<WalkController> Log)
         {
             _walkRepository = walkRepository;
             _mapper = mapper;
+            _log = Log;
         }
 
 
         // get all walks 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetAll([FromQuery]string? filterQury , string? sortBy, bool? isAscending, int pageNumber = 1, int pageSize = 1000)
         {
-            var Walks = await _walkRepository.GetAllAsync(filterQury , sortBy , isAscending?? true , pageNumber ,pageSize);
+            try
+            {
+                _log.LogInformation("User use A get all method");
+                var Walks = await _walkRepository.GetAllAsync(filterQury, sortBy, isAscending ?? true, pageNumber, pageSize);
+                return Ok(_mapper.Map<List<ReadWalkDto>>(Walks));
+            }
+            catch (Exception ex )
+            {
+
+                _log.LogError(ex ,ex.Message);
+
+                throw;
+            }
+           
 
             
 
-          return  Ok(_mapper.Map<List<ReadWalkDto>>(Walks));
+         
         }
         // get all walks by id
         [HttpGet("{Id}")]
