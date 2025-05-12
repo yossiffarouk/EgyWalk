@@ -12,6 +12,7 @@ namespace EgyWalk.Api.Mapping
             CreateMap<Walk , AddWalkDto>().ReverseMap();
             CreateMap<Walk , ReadWalkDto>().ReverseMap();
             CreateMap<Region , ReadRegionDto>().ReverseMap();
+            CreateMap<Region , AddRegionDto>().ReverseMap();
         }
     }
 }

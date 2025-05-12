@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EgyWalk.Api.CustomFilter;
 using EgyWalk.Api.Dtos.WalkDtos;
 using EgyWalk.Api.Models.Domain;
 using EgyWalk.Api.Repositories.WalkRepository;
@@ -28,7 +29,7 @@ namespace EgyWalk.Api.Controllers
 
         // get all walks 
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery]string? filterQury , string? sortBy, bool? isAscending, int pageNumber = 1, int pageSize = 1000)
         {
 
@@ -66,6 +67,7 @@ namespace EgyWalk.Api.Controllers
         // add new walk
         [HttpPost]
         [Authorize(Roles = "Writer")]
+        [ValidateModel]
         public async Task<IActionResult> Post(AddWalkDto walkDto)
         {
             var walks = await _walkRepository.AddAsync(_mapper.Map<Walk>(walkDto));
@@ -91,8 +93,9 @@ namespace EgyWalk.Api.Controllers
 
         // update a walk 
         [HttpPut]
-        [Route("{Id:Guid}")]
+        [Route("Update/{Id:Guid}")]
         [Authorize(Roles = "Writer")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid Id , AddWalkDto walkDto)
         {
             var walk = await _walkRepository.Update(Id, _mapper.Map<Walk>(walkDto));

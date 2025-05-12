@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EgyWalk.Api.CustomFilter;
 using EgyWalk.Api.Dtos.RegionDtos;
 using EgyWalk.Api.Dtos.WalkDtos;
 using EgyWalk.Api.Models.Domain;
@@ -26,9 +27,9 @@ namespace EgyWalk.Api.Controllers
         }
 
 
-        // get all walks 
+        // get all Regions 
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] string? filterQury, string? sortBy, bool? isAscending, int pageNumber = 1, int pageSize = 1000)
         {
 
@@ -37,7 +38,7 @@ namespace EgyWalk.Api.Controllers
             return Ok(_mapper.Map<List<ReadRegionDto>>(Regions));
 
         }
-        // get all walks by id
+        // get all Region by id
         [HttpGet("{Id}")]
         [Authorize]
         public async Task<IActionResult> GetById([FromRoute] Guid Id)
@@ -54,6 +55,7 @@ namespace EgyWalk.Api.Controllers
         // add new Region
         [HttpPost]
         [Authorize(Roles = "Writer")]
+        [ValidateModel]
         public async Task<IActionResult> Post(AddRegionDto RegionDto)
         {
             var Region = await _regionRepo.AddAsync(_mapper.Map<Region>(RegionDto));
@@ -65,6 +67,7 @@ namespace EgyWalk.Api.Controllers
         [HttpDelete]
         [Route("Delete/{Id:Guid}")]
         [Authorize(Roles = "Writer")]
+
 
         public async Task<IActionResult> Delete([FromRoute] Guid Id)
         {
@@ -79,8 +82,9 @@ namespace EgyWalk.Api.Controllers
 
         // update a Region 
         [HttpPut]
-        [Route("{Id:Guid}")]
+        [Route("Update/{Id:Guid}")]
         [Authorize(Roles = "Writer")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid Id, AddRegionDto RegionDto)
         {
             var Region = await _regionRepo.Update(Id, _mapper.Map<Region>(RegionDto));
