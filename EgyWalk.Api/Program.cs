@@ -1,13 +1,16 @@
 using AutoMapper;
 using EgyWalk.Api.Data;
 using EgyWalk.Api.Mapping;
+using EgyWalk.Api.Repositories.ImageRepository;
 using EgyWalk.Api.Repositories.TokenRepository;
 using EgyWalk.Api.Repositories.WalkRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Net.NetworkInformation;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -50,6 +54,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddScoped<IWalkRepository , WalkRepo>();
 builder.Services.AddScoped<ITokenRepo , TokenRepo>();
+builder.Services.AddScoped<IimageRepo , ImageLocalRepo>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 builder.Services.AddDbContext<EgyWalkDbContext>(options =>
@@ -121,6 +126,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    RequestPath = "/Images"
+});
 
 app.MapControllers();
 
